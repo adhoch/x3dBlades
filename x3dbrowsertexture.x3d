@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE X3D PUBLIC "ISO//Web3D//DTD X3D 3.0//EN" "http://www.web3d.org/specifications/x3d-3.0.dtd">
+<X3D xmlns:xsd='http://www.w3.org/2001/XMLSchema-instance' profile='Full' version='3.0' xsd:noNamespaceSchemaLocation='http://www.web3d.org/specifications/x3d-3.0.xsd'>
+    <Engine>
+        <RenderJob>
+            <WindowGroup>
+                <Window size='1024 762'/>
+            </WindowGroup>
+        </RenderJob>
+    </Engine>
+    
+    <Scene DEF='scene'>
+        <Viewpoint position='0 0 29' />
+        <IOSensor DEF='kinect' type='kinect'>
+            <field accessType='outputOnly' name='JointPositions' type='MFVec3f' />
+        </IOSensor>
+        
+        <Transform translation='0 0 0'>
+            <Transform DEF='transform'>
+                <UserBody DEF='userbody'>
+                    <Transform>
+                        <Shape>
+                            <Appearance>
+                                <Material diffuseColor='1 0 0' />
+                            </Appearance>
+                            <Sphere radius='0.1' />
+                        </Shape>
+                    </Transform>
+                </UserBody>
+            </Transform>
+        </Transform>
+        <Transform translation='0 0 -1'>
+            <TouchSensor DEF='touchMe' />
+            <Shape>
+                <Appearance>
+                    <BrowserTexture DEF='browser' url='http://sketchia.com/draw.html#XrS64YQ' size='1024 762' updateMode='always' minFilter='linear' magFilter='linear' delegateLinkHandling='false'>
+                    </BrowserTexture>
+                </Appearance>
+                <!--         <Rectangle2D size='30 22.5'/>
+ --> <Rectangle2D size='15 10'/>
+            </Shape>
+        </Transform>	
+        
+        <Script DEF='cursor_script' url='RightHand2DCursor.js'>
+            <field name='skeleton_changed' accessType='inputOnly' type='MFVec3f' />
+            <field name="new_pos" accessType="outputOnly" type="SFVec3f" />
+            <field name="hot" accessType="outputOnly" type="SFBool" />
+            <field accessType='inputOutput' name='hit_from' type='SFNode'>
+                <Touchsensor USE='touchMe' />
+            </field>
+            <field accessType='inputOutput' name='hit_to' type='SFNode'>
+                <BrowserTexture USE='browser' />
+            </field>			
+            
+        </Script>	
+        
+        <ROUTE fromNode='kinect' fromField='JointPositions' toNode='cursor_script' toField='skeleton_changed' />
+        <ROUTE fromNode='cursor_script' fromField='new_pos' toNode='transform' toField='set_translation' />
+        <ROUTE fromNode='cursor_script' fromField='hot' toNode='userbody' toField='hot' />		  
+        
+        <ROUTE fromNode='touchMe' fromField='isActive' toNode='browser' toField='button1'/>
+        <ROUTE fromNode='touchMe' fromField='hitTexCoord_changed' toNode='browserTexture' toField='pointer'/>
+        
+        
+        
+    </Scene>
+</X3D>

@@ -1,0 +1,216 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE X3D PUBLIC "ISO//Web3D//DTD X3D 3.0//EN" "http://www.web3d.org/specifications/x3d-3.0.dtd">
+<X3D profile='Full' version='3.0'  xmlns:xsd='http://www.w3.org/2001/XMLSchema-instance' xsd:noNamespaceSchemaLocation =' http://www.web3d.org/specifications/x3d-3.0.xsd '>
+	<head>
+	</head>
+	<Scene>
+		<NavigationInfo DEF="WALK_FIRST" type='"WALK" "EXAMINE" "ANY"'></NavigationInfo>
+		<DirectionalLight intensity="1" direction="-1 0 0"></DirectionalLight>
+		<!-- heights based on average viewer height of 1.6 meters -->
+		<Viewpoint DEF="overview" description="overview" orientation="1 0 0 -.15" position="0 10 10"></Viewpoint>
+		<Viewpoint DEF="groundFloor" description="ground_floor" orientation="1 0 0 .87" position="0 1.6 -1"></Viewpoint>
+		<Viewpoint DEF="firstBridge" description="first_floor_bridge" orientation="0 1 0 0.65" position="4 5.8 2"></Viewpoint>
+		<Viewpoint DEF="firstBridgeCl" description="first_floor_bridge_up_close" orientation="0 1 0 1.0" position="4 5.8 -3" fieldOfView="1.5"></Viewpoint>
+		<Viewpoint DEF="secondBridge" description="second_floor_bridge" orientation="0 1 0 0.75" position="4 10.2 0"></Viewpoint>
+		<Viewpoint DEF="secondBridgeCl" description="second_floor_bridge_up_close" orientation="0 1 0 1.4" position="4 10.2 -4" fieldOfView="1.5"></Viewpoint>
+		
+		<!-- Building rough-in - NOT BE EXACT SIZE AND ANGLES, BUT IT IS REASONABLE. WE CAN ADJUST LATER. -->
+		<!-- Lobby Floor -->
+		<Transform rotation="1 0 0 1.57">
+			<Shape>
+				<Appearance>
+					<Material DEF="floor_mat" diffuseColor=".8 .8 .8" ambientIntensity="1.0"></Material>
+					<ImageTexture url="tile4.gif"></ImageTexture>
+					<TextureTransform scale="5 5"></TextureTransform>
+				</Appearance>
+				<Rectangle2D solid="false" size="10 10"></Rectangle2D>
+			</Shape>
+		</Transform>
+		<!-- first floor walkway -->
+		<Transform rotation="1 0 0 1.57" translation="4 4.2 0">
+			<Shape DEF="walkway">
+				<Appearance>
+					<Material DEF="translucent_mat" diffuseColor=".8 .8 .8" ambientIntensity="1.0"
+						transparency="0.5"></Material>
+				</Appearance>
+				<Box size="1.5 12 .01" solid="true"></Box>
+			</Shape>
+		</Transform>
+		<!-- second floor walkway -->
+		<Transform rotation="1 0 0 1.57" translation="4 8.6 0">
+			<Shape USE="walkway"></Shape>
+		</Transform>
+		
+		<!-- transform for entire window/blade grouping - move to left and up so that bottom of limestone is about 12 feet above floor -->
+		<Transform translation="-2.7 8.25 -5">
+			<!--semi-transparent windows with cloud texture -->
+			<Transform translation="2.7 0 -.15">
+				<Shape>
+					<Appearance>
+						<Material DEF="window_mat" diffuseColor=".2 .2 .3" transparency="0.5"></Material>
+						<ImageTexture url="clouds1.jpg"></ImageTexture>
+					</Appearance>
+					<Rectangle2D size="5.8 8.23"></Rectangle2D>
+				</Shape>
+			</Transform>
+			<!-- Bottom Horizontal Limestone piece -->
+			<Transform DEF="limestone_footer" translation="2.7 -4.6 -.23">
+				<Shape DEF="limestone_beam">
+					<Appearance DEF="limestone_app">
+						<ImageTexture DEF="limestone_texture" url="seamless-limestone-texture-1.jpg"></ImageTexture>
+						<TextureTransform scale="1 1"></TextureTransform>
+						<Material DEF="limestone_mat" diffuseColor=".4 .4 .3"></Material>
+					</Appearance>
+					<Box size="5.8 1 .4"></Box>
+				</Shape>
+			</Transform>
+			<!-- Top Horizontal Limestone piece -->
+			<Transform DEF="limestone_header" translation="2.7 4.6 0">
+				<Shape USE="limestone_beam"></Shape>
+			</Transform>
+			
+			
+			
+			
+			
+			<!-- ****** First Blade - components DEF-ed for other six blades *********** -->
+			<Transform DEF="LED_blade" rotation="0 1 0 .785" translation="0 0 0">
+				<!-- rectangle with 1/7 of the image -->
+				<Shape DEF="firstBlade">
+					<Appearance DEF="firstApp">
+						<Material DEF="blade_mat" diffuseColor="1 1 1" emissiveColor="0 0 0"></Material>
+						<TextureTransform scale="1 .1429" translation="0 0" rotation="-1.5708"></TextureTransform> <!-- rotation = -1.5708 t -->
+						<!-- rotation = -1.5708 t -->
+						<!-- use NEAREST_PIXEL texture property to force pixelized look rather than smoothing -->
+						
+				<!--		******* This doesn't work
+						<MovieTexture DEF='blade_image' enabled="false"  loop="TRUE" url="bigBuckBunny.ogv" >
+				<TextureProperties magnificationFilter='NEAREST_PIXEL' minificationFilter='NEAREST_PIXEL'/>				
+				
+			</MovieTexture>-->
+						
+						
+						<ImageTexture DEF="blade_image" url="ppt_template_H3.jpg">
+							<TextureProperties magnificationFilter="NEAREST_PIXEL" minificationFilter="NEAREST_PIXEL"/>
+						</ImageTexture>
+					
+			
+					</Appearance>
+					<Rectangle2D DEF="blade_rect" size=".268 8.23"></Rectangle2D>
+				</Shape>
+				<!-- LED pixel overlay 48 x 1296 - THIS CAN BE TURNED OFF VIA SWITCH AS IT MAKES EVERYTHING DARKER -->
+				<Transform DEF="pixel_grid" translation="0 0 0.003">
+					<Switch DEF="pixel_grid_switch" whichChoice="0">
+						<!-- setting: 0=first one (on) -1=none (off)-->
+						<Shape>
+							<Appearance>
+								<Material diffuseColor=".5 .5 1" transparency="0.9"></Material>
+								<ImageTexture url="single_pixel2.png"></ImageTexture>
+								<TextureTransform scale="48 1296"></TextureTransform>
+							</Appearance>
+							<Rectangle2D USE="blade_rect"></Rectangle2D>
+						</Shape>
+					</Switch>
+				</Transform>
+				<!-- the vertical limestone piece -->
+				<Transform DEF="limestone_blade" translation="-0.03 0 -0.14" rotation="0 1 0 -.785">
+					<Shape>
+						<Appearance USE="limestone_app"></Appearance>
+						<Box size="0.05 8.23 0.3"></Box>
+					</Shape>
+				</Transform>
+				
+			</Transform>
+			
+			<!-- *********** Copy Blades ********************************** -->
+			
+			<Group DEF="blades">
+			<Transform rotation="0 1 0 .785" translation=".914 0 0">
+				<Shape>
+					<Appearance>
+						<Material USE="blade_mat"></Material>
+						<TextureTransform scale="1 .1429" translation="1 0" rotation="-1.5708"></TextureTransform> <!-- rotation = -1.5708 t -->
+						<ImageTexture USE="blade_image"></ImageTexture>
+						
+					</Appearance>
+					<Rectangle2D USE="blade_rect"></Rectangle2D>
+				</Shape>
+				<Transform USE="pixel_grid"></Transform>
+				<Transform USE="limestone_blade"></Transform>
+			</Transform>
+			
+			<Transform rotation="0 1 0 .785" translation="1.828 0 0">
+				<Shape>
+					<Appearance>
+						<Material USE="blade_mat"></Material>
+						<TextureTransform scale="1 .1429" translation="2 0" rotation="-1.5708"></TextureTransform> <!-- rotation = -1.5708 t -->
+						<!--<ImageTexture USE="blade_image"></ImageTexture>-->
+						<ImageTexture USE="blade_image"></ImageTexture>
+					</Appearance>
+					<Rectangle2D USE="blade_rect"></Rectangle2D>
+				</Shape>
+				<Transform USE="pixel_grid"></Transform>
+				<Transform USE="limestone_blade"></Transform>
+			</Transform>
+			
+			<Transform rotation="0 1 0 .785" translation="2.742 0 0">
+				<Shape>
+					<Appearance>
+						<Material USE="blade_mat"></Material>
+						<TextureTransform scale="1 .1429" translation="3 0" rotation="-1.5708"></TextureTransform> <!-- rotation = -1.5708 t -->
+						<!--<ImageTexture USE="blade_image"></ImageTexture>-->
+						<ImageTexture USE="blade_image"></ImageTexture>
+					</Appearance>
+					<Rectangle2D USE="blade_rect"></Rectangle2D>
+				</Shape>
+				<Transform USE="pixel_grid"></Transform>
+				<Rectangle2D USE="limestone_blade"></Rectangle2D>
+			</Transform>
+			
+			<Transform rotation="0 1 0 .785" translation="3.658 0 0">
+				<Shape>
+					<Appearance>
+						<Material USE="blade_mat"></Material>
+						<TextureTransform scale="1 .1429" translation="4 0" rotation="-1.5708"></TextureTransform> <!-- rotation = -1.5708 t -->
+						<!--<ImageTexture USE="blade_image"></ImageTexture>-->
+						<ImageTexture USE="blade_image"></ImageTexture>
+					</Appearance>
+					<Rectangle2D USE="blade_rect"></Rectangle2D>
+				</Shape>
+				<Transform USE="pixel_grid"></Transform>
+				<Rectangle2D USE="limestone_blade"></Rectangle2D>
+			</Transform>
+			
+			<Transform rotation="0 1 0 .785" translation="4.572 0 0">
+				<Shape>
+					<Appearance>
+						<Material USE="blade_mat"></Material>
+						<TextureTransform scale="1 .1429" translation="5 0" rotation="-1.5708"></TextureTransform> <!-- rotation = -1.5708 t -->
+						<!--<ImageTexture USE="blade_image"></ImageTexture>-->
+						<ImageTexture USE="blade_image"></ImageTexture>
+					</Appearance>
+					<Rectangle2D USE="blade_rect"></Rectangle2D>
+				</Shape>
+				<Transform USE="pixel_grid"></Transform>
+				<Rectangle2D USE="limestone_blade"></Rectangle2D>
+			</Transform>
+			
+			<Transform rotation="0 1 0 .785" translation="5.486 0 0">
+				<Shape>
+					<Appearance>
+						<Material USE="blade_mat"></Material>
+						<TextureTransform scale="1 .1429" translation="6 0" rotation="-1.5708"></TextureTransform> <!-- rotation = -1.5708 t -->
+						<!--<ImageTexture USE="blade_image"></ImageTexture>-->
+						<ImageTexture USE="blade_image"></ImageTexture>
+					</Appearance>
+					<Rectangle2D USE="blade_rect"></Rectangle2D>
+				</Shape>
+				<Transform USE="pixel_grid"></Transform>
+				<Rectangle2D USE="limestone_blade"></Rectangle2D>
+			</Transform>
+			</Group>
+		</Transform>
+		<!-- entire window group xform -->
+		
+	</Scene>
+</X3D>
